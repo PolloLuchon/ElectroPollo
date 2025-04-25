@@ -1,0 +1,53 @@
+from pybricks.pupdevices import ForceSensor
+from pybricks.parameters import Port
+from pybricks.tools import wait
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+# Initialize the sensor.
+
+hub = PrimeHub()
+
+#Inicialización de variables
+motor_izq= Motor(Port.D,Direction.COUNTERCLOCKWISE)
+motor_der= Motor(Port.C)
+button = ForceSensor(Port.A)
+
+#Comando de Trabajo
+#IDA
+
+#Avance1
+motor_izq.run_time(500,6500,wait=False)
+motor_der.run_time(500,6500)
+
+#Giro1
+motor_der.run_angle(300,200)
+#AVANCE2
+
+motor_izq.run_time(500,6500,wait=False)
+motor_der.run_time(500,6500)
+
+touch = button.touched()
+
+if (touch):
+
+    #Avance1
+    motor_izq.run_time(-500,1000,wait=False)
+    motor_der.run_time(-500,1000)
+    
+    print("Touched:", touch)
+    wait(200)
+
+#GIRO EN U
+motor_der.run_time(-200,2000)
+
+#Avance3
+motor_izq.run_time(500,8000,wait=False)
+motor_der.run_time(500,8000)
+
+
+
+
