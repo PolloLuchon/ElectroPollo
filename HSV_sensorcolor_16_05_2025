@@ -1,0 +1,62 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+sensor = ColorSensor(Port.A)
+motor_izq= Motor(Port.E)
+motor_der= Motor(Port.F,Direction.COUNTERCLOCKWISE)
+"""
+motor_izq.run_time(-400,1500,wait=False)
+motor_der.run_time(-400,1500)
+motor_der.run_time(-250,2000)
+"""
+#Comando de Trabajo.Ejemplo
+"""
+while True:
+    color = sensor.hsv()
+    print(color)
+
+    # Wait so we can read the value.
+    wait(500)
+"""
+Color.GREEN = Color(h=172, s=75, v=42)
+Color.YELLOW = Color(h=50, s=56, v=78)
+Color.RED = Color(h=351, s=84, v=60)
+Color.NONE = Color(h=0, s=0, v=0)
+my_colors = (Color.GREEN, Color.YELLOW, Color.RED, Color.NONE )
+sensor.detectable_colors(my_colors)
+
+#Funciones
+def avance():
+        motor_der.run_angle(150, 360*2.5,wait=False)
+        motor_izq.run_angle(150, 360*2.5)
+    
+def giro():
+        motor_der.run_angle(250, -135,wait=False)
+        motor_izq.run_angle(250, 135)
+
+#ciclo principal
+
+avance()
+giro()
+
+while True: 
+      color = sensor.color()
+      print(color)
+      
+      wait(20)  
+      
+      avance()
+      
+      if color== Color.GREEN:
+        hub.light.on(Color.RED)
+        wait(1000)
+      if color== Color.RED:
+        motor_der.stop()
+        motor_izq.stop()
+        break
+
+
