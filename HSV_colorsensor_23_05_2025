@@ -1,0 +1,57 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+#Inicializacion de variables
+hub = PrimeHub()
+sensor = ColorSensor(Port.F)
+motor_izq= Motor(Port.D, Direction.COUNTERCLOCKWISE)
+motor_der= Motor(Port.C)
+
+#Declaracion de funciones
+
+def avanzar():
+    motor_izq.run_time(300,7300,wait=False)
+    motor_der.run_time(300,7300)
+
+#Comando de trabajo
+
+"""
+while True:
+    color = sensor.hsv()
+    print(color)
+
+    wait(500)
+"""
+
+Color.BLACK = Color(h=180, s=9, v=29)
+Color.WHITE = Color(h=0, s=0, v=100)
+Color.NONE = Color(h=0, s=0, v=0)
+
+my_colors = (Color.BLACK, Color.WHITE, Color.NONE)
+
+sensor.detectable_colors(my_colors)
+
+while True:
+    color = sensor.color()
+    avanzar()
+    
+    if color == Color.WHITE:
+        motor_izq.run_time(-200,500, wait=False)
+        motor_der.run_time(-200,500)
+        wait(1000)
+        motor_der.run(-145)
+        motor_izq.run(145)
+        wait(1000)
+        motor_der.run_time(200, 1300, wait=False)
+        motor_izq.run_time(200, 1300)
+        wait(1000)
+        motor_izq.run_time(-200,1500, wait=False)
+        motor_der.run_time(-200,1500)
+        wait(1000)
+        motor_der.run(135)
+        motor_izq.run(-135)
+        wait(1000)
+
