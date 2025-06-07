@@ -1,0 +1,76 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+md = Motor(Port.F)
+mi = Motor(Port.A)
+sc = ColorSensor(Port.D)
+spresion = ForceSensor(Port.C)
+color = sc.color()  
+reflection = sc.reflection()
+contador = 0 
+touch = spresion.touched()
+
+def avanzar():
+    md.run(200)
+    mi.run(-200)
+
+def retroceso():
+    md.run(-200)
+    mi.run(200)
+    wait(750)
+
+def giros():
+    md.run_angle(400,360*3)
+    mi.run_angle(400,360*3,wait=False)
+def stop():
+    md.stop()
+    mi.stop()
+    wait(1000)
+
+
+
+while True:
+    h, s, v = sc.hsv()    
+    if reflection>50:
+        avanzar()
+    if(214 < h < 220) and (84 < s < 89) and (35 < v < 42):
+        wait(500)
+        contador=contador+1
+        print(contador)
+    if spresion.touched() and contador == 1:
+        retroceso()     
+        giros()
+        
+    if spresion.touched() and contador == 2:
+        retroceso()     
+        giros() 
+        giros() 
+       
+    if spresion.touched() and contador == 3:
+        retroceso()     
+        giros()
+        stop() 
+        giros() 
+        stop() 
+        giros()  
+        
+    
+
+    
+        
+
+    
+
+
+    
+
+
+
+   
+
+
+
