@@ -1,0 +1,53 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+md = Motor(Port.A)
+mi = Motor(Port.D)
+sensor = ColorSensor(Port.E)
+contadorblanco = 0
+contadorbloque = 0
+
+def avanzar():
+    md.run_time(200,1000)
+    mi.run_time(-200,1000)
+
+def retroceso():
+    md.run(-200)
+    mi.run(200)
+    wait(750)
+
+def giros():
+    md.run_angle(-400,360)
+    mi.run_angle(400,-340)
+
+md.run(100)
+mi.run(-100)
+wait(2000)
+
+"""
+while True:
+    color = sensor.hsv()
+    print(color)
+"""
+while True:
+    md.run(100)
+    mi.run(-100)
+#wait(2000)  
+    h, s, v = sensor.hsv()    
+    if(0< h < 140) and (0< s < 150) and (0 < v < 30):
+        wait(500)
+        contadorblanco += 1
+        print("ContadorBlanco", contadorblanco)
+    if(0< h < 500) and (0< s < 500) and (0 < v < 500):
+        wait(1500)
+        contadorbloque += 1
+        print("ContadorBloque", contadorbloque)
+    if contadorbloque == 3:
+        mi.stop()
+        md.stop()  
+        giros()
+        break
