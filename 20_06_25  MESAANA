@@ -1,0 +1,50 @@
+hub = PrimeHub()
+sensor = ColorSensor(Port.E)
+motor_izq= Motor(Port.A, Direction.COUNTERCLOCKWISE)
+motor_der= Motor(Port.B)
+contador=0
+#comandos
+
+Color.RED = Color(h=352, s=92, v=29)
+Color.GREEN = Color(h=165, s=75, v=13)
+
+
+my_colors = (Color.GREEN, Color.RED, Color.NONE)
+
+
+sensor.detectable_colors(my_colors)
+motor_der.run_time(200,3000, wait=False)
+motor_izq.run_time(200,3000)
+wait(1000)
+
+while True:
+    color = sensor.color()
+
+    print(color)
+
+    if color==Color.GREEN:
+        pass
+    if color==Color.RED:
+        contador+=1
+        hub.light.on(Color.RED)
+        wait(500)
+        hub.light.off()
+        motor_der.stop()
+        motor_izq.stop()
+        wait(500)
+        print(contador)
+        """
+        motor_der.run_angle(180,-140)
+        motor_izq.run_angle(180,140)
+
+
+    motor_der.run_time(200,1700, wait=False)
+    motor_izq.run_time(200,1700)
+    wait(1000)
+    
+    if color==Color.GREEN:
+        pass
+    if color==Color.RED:
+        motor_der.run_angle(180,90)
+        motor_izq.run_angle(180,-90)
+"""
