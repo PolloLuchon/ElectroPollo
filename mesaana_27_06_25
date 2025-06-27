@@ -1,0 +1,38 @@
+hub = PrimeHub()
+
+motor_d = Motor(Port.F,Direction.COUNTERCLOCKWISE)
+motor_i = Motor(Port.C)
+sensor = ColorSensor(Port.B)
+ultra = UltrasonicSensor (Port.E)
+
+
+
+
+def avanzar():
+    motor_i.run(100)
+    motor_d.run(100)
+    
+def parar():
+    motor_d.stop()
+    motor_i.stop()
+    wait(3500)
+
+    
+    motor_d.run(50)
+    motor_i.run(50)
+    wait(1000)
+
+contador = 0
+
+hub.display.number(contador)
+
+while True:
+    h, s, v = sensor.hsv()
+    hub.display.number(contador)
+    distance = int(ultra.distance()/10)
+    avanzar()
+    if (210< h <220) and (60<s<80) and (10<v<20): 
+        parar()
+        if distance <10:
+         contador+=1 
+         avanzar()
