@@ -1,0 +1,66 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+md=Motor(Port.F)
+mi=Motor(Port.A,Direction.COUNTERCLOCKWISE)
+sc= ColorSensor(Port.D)
+sult=UltrasonicSensor(Port.B)
+contador=0
+contador_linea=0
+
+Color.RED= Color (h=20 ,s=66, v=60)
+Color.BLUE = Color(h=215, s=71, v=27)
+my_colors = (Color.BLUE, Color.NONE, Color.RED)
+
+sc.detectable_colors(my_colors)
+"""
+while True:
+    color = sc.color()
+    hcv= sc.hsv()
+    print(hcv,color)
+
+"""
+def avanzar():
+    mi.run(152)
+    md.run(150) 
+    wait(1000)
+def detenerse():
+    mi.run(0)
+    md.run(0)
+    wait(1000)
+mi.run(152)
+md.run(150) 
+
+while True:
+    distancia=sult.distance()/10
+    print(distancia)
+    colorsito = sc.color()
+    print(colorsito)
+    print(contador)
+   
+    if colorsito==Color.BLUE:
+        detenerse()
+        avanzar()
+        contador_linea +=1
+
+        if distancia <20:
+            contador+=1
+            print(contador)
+            sult.lights.on()
+            hub.display.number(contador)
+            hub.speaker.beep()
+            wait(1000)
+        else:
+            sult.lights.off()
+
+    if contador_linea==7:
+        hub.light.on(Color.GREEN)
+        wait(5000)
+        hub.light.off(Color.GREEN)
+        wait(5000)
+        detenerse()
+        break
