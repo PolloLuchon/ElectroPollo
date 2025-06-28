@@ -1,0 +1,62 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+mi = Motor(Port.A,Direction.COUNTERCLOCKWISE)
+md = Motor(Port.B)
+ultrasonido = UltrasonicSensor(Port.F)
+sensorcolor = ColorSensor(Port.E)
+contador = 0
+contadorazul = 0
+#TRABAJO
+
+"""
+while True:
+    color = sensorcolor.hsv()
+    print(color)
+    wait(500)
+"""
+Color.BLUE = Color(h=214, s=76, v=60)
+Color.GREEN = Color(h=19, s=66, v=96)
+my_colors = (Color.BLUE, Color.GREEN, Color.NONE)
+
+sensorcolor.detectable_colors(my_colors)
+
+
+md.run(100)
+mi.run(100)
+while True:
+    color = sensorcolor.color()
+    hub.display.number(contador)
+    if color == Color.BLUE:
+        distancia = int(ultrasonido.distance()/10)
+        mi.stop()
+        md.stop()
+        wait(1000)
+        contadorazul = contadorazul + 1
+        mi.run(70)
+        md.run(70)
+        wait(400)
+        if distancia < 25:
+            contador = contador + 1
+            print("Puertas",contador)
+    if contadorazul == 7:
+        md.run_angle(100, 250)
+        mi.run_time(100,1000,wait=False)
+        md.run_time(100,1000)
+        md.run_angle(100, 250)
+        mi.run_time(100,1500,wait=False)
+        md.run_time(100,1500)
+
+"""
+while True:
+    distancia = int(ultrasonido.distance()/10)
+    print(distancia)
+"""
+
+        
+
+
