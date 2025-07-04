@@ -1,0 +1,54 @@
+hub = PrimeHub()
+mi = Motor(Port.A,Direction.COUNTERCLOCKWISE)
+md = Motor(Port.F)
+ultrasonido = UltrasonicSensor(Port.B)
+sensorcolor = ColorSensor(Port.C)
+contador = 0
+
+
+while True:
+    mi.run(150)
+    md.run(150)
+    
+
+
+    h, s, v = sensorcolor.hsv()
+    print(h, s, v)
+    hub.display.number(contador)
+    distance = int(ultrasonido.distance()/10)
+    #NEGROS
+    
+    
+    #AMARILLO
+    if (49< h <55) and (69<s<75) and (84<v<90): 
+         mi.run_angle(150, -360,wait=False)
+         md.run_angle(150,-360)
+    
+    #VERDE
+    if (125< h <135) and (50<s<65) and (35<v<50): 
+        mi.stop()
+        md.stop()
+        wait(500)
+        
+        md.run_angle(150,445)
+        mi.run_angle(150, 360*4.5,wait=False)
+        md.run_angle(150, 360*4.5)
+        #girto
+        mi.run_angle(150,445)
+        #vuelve a avazar
+        mi.run_angle(150, 360*15,wait=False)
+        md.run_angle(150, 360*15)
+        if (125< h <135) and (50<s<65) and (35<v<50): 
+            contador+=1 
+            hub.display.number(contador)
+    #AZUL
+    if (213< h <223) and (79<s<89) and (40<v<53): 
+        mi.stop()
+        md.stop()
+        wait(500)
+        hub.display.char("A")
+        mi.run_angle(150,445)
+        mi.run_angle(150, 360*2,wait=False)
+        md.run_angle(150, 360*2)
+
+    
