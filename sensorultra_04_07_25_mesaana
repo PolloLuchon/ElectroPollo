@@ -36,19 +36,41 @@ while True:
         #girto
         mi.run_angle(150,445)
         #vuelve a avazar
-        mi.run_angle(150, 360*15,wait=False)
-        md.run_angle(150, 360*15)
-        if (125< h <135) and (50<s<65) and (35<v<50): 
-            contador+=1 
-            hub.display.number(contador)
+        mi.run_angle(150, 360*17,wait=False)
+        md.run_angle(150, 360*17)
+        #girofinal
+        mi.run_angle(150,180)
+        #ultimoavance
+        mi.run_angle(150, 350,wait=False)
+        md.run_angle(150, 350)
+    if (125< h <135) and (50<s<65) and (35<v<50): 
+        contador+=1 
+        hub.display.number(contador)
     #AZUL
     if (213< h <223) and (79<s<89) and (40<v<53): 
         mi.stop()
         md.stop()
         wait(500)
         hub.display.char("A")
+        #giro
         mi.run_angle(150,445)
-        mi.run_angle(150, 360*2,wait=False)
-        md.run_angle(150, 360*2)
+        #avance
+        mi.run_angle(150, 360*1.8,wait=False)
+        md.run_angle(150, 360*1.8)
+        #giro
+        md.run_angle(150,445)
+        #avance
+        mi.run_angle(150, 360*8,wait=False)
+        md.run_angle(150, 360*8)
+        #giro
+        md.run_angle(150,420)
+        #avance
+        mi.run_angle(150, 360*8,wait=False)
+        md.run_angle(150, 360*8)
+        #giro
+        md.run_angle(150,460)
+        #avance
+        mi.run_angle(150, 360*5,wait=False)
+        md.run_angle(150, 360*5)
 
     
