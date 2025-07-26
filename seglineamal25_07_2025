@@ -1,0 +1,50 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+sensor = ColorSensor(Port.D)
+
+mi = Motor(Port.E)
+md = Motor(Port.B, Direction.COUNTERCLOCKWISE)
+
+
+Color.BLACK = Color(h=200, s=27, v=13)
+Color.WHITE = Color(h=180, s=5, v=52)
+
+my_colors = (Color.BLACK, Color.WHITE, Color.NONE)
+sensor.detectable_colors(my_colors)
+
+"""
+while True:
+    color = sensor.color()
+    reflection = sensor.reflection()
+    print(reflection, color)
+    wait(100)
+"""
+while True:
+    reflection = sensor.reflection()
+
+    #negro
+    if reflection < 51:
+        mi.run(20)
+        md.run(80)
+
+    #blanco
+    elif reflection > 52:
+        md.run(20)
+        mi.run(80)
+    
+    else:
+        md.run(90)
+        mi.run(90)
+        
+        
+    
+        
+
+      
+    
+      
