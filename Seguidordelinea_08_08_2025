@@ -1,0 +1,78 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+
+mi = Motor(Port.B, Direction.COUNTERCLOCKWISE)
+md = Motor(Port.E)
+sensorizq = ColorSensor(Port.A)
+sensorder = ColorSensor(Port.D)
+ultrasonido =   UltrasonicSensor(Port.F)
+
+def giro1():
+        md.run(80)
+        wait(1000)
+
+def giro2():
+        mi.run(80)
+        wait(1000)
+    
+def avance1():
+        md.run(80)
+        mi.run(80)
+        wait(1000)
+    
+def avance2():
+        md.run(80)
+        mi.run(80)
+        wait(2000)
+"""
+while True:
+    color = sensorder.color()
+    reflection = sensorder.reflection()
+    print(reflection, "DERECHO")
+    wait(100)
+    color = sensorizq.color()
+    reflection = sensorizq.reflection()
+    print(reflection, "IZQUIERDO")
+    wait(100)
+"""   
+
+while True:
+    print(ultrasonido.distance()/10)
+    #negro
+    if sensorizq.reflection() > 20:
+        mi.run(80)
+    
+    #blanco
+    if sensorizq.reflection() < 20:
+        mi.run(-110)
+
+    if sensorder.reflection() > 20:
+        md.run(80)
+
+    if sensorder.reflection() < 20:
+        md.run(-110)
+    
+    if ultrasonido.distance()/10 < 5:
+        #retro
+        md.run(-80)
+        mi.run(-80)
+        wait(1500)
+        #giro1
+        giro1()
+        #giro2()
+        avance2()
+        giro1()
+
+
+    
+
+
+
+
+
+
