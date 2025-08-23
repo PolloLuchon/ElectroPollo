@@ -1,0 +1,89 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+
+mi = Motor(Port.B, Direction.COUNTERCLOCKWISE)
+md = Motor(Port.E)
+sensorizq = ColorSensor(Port.A)
+sensorder = ColorSensor(Port.D)
+
+
+Color.GREEN = Color(h=166, s=69, v=32)
+Color.GRAY = Color(h=190, s=13, v=91)
+
+my_colors = (Color.GREEN, Color.RED,Color.WHITE,Color.GRAY, Color.NONE)
+
+
+sensorder.detectable_colors(my_colors)
+
+def giro1():
+        md.run_angle(50,90,wait=False)
+        md.run_angle(50,-90)
+        wait(1250)
+
+def giro2():
+        mi.run_angle(80)
+        wait(1000)
+    
+def avance1():
+        md.run(80)
+        mi.run(80)
+        wait(500)
+    
+def avance2():
+        md.run(80)
+        mi.run(80)
+        wait(2000)
+        
+"""
+while True:
+    color = sensorder.hsv()
+
+    # Print the results.
+    print(color)
+
+    # Wait so we can read the value.
+    wait(500)
+    """
+while True:
+    color = sensorder.color()
+    reflection = sensorder.reflection()
+    print(reflection,color)
+    wait(100)
+
+    color1 = sensorder.color()
+
+ #   color2 = sensorder.color()
+    print(color1)
+   # print(color2)
+    wait(1000)
+    if color1 == Color.GRAY:
+        mi.run(20)
+        md.run(20)
+
+    if color1 == Color.GREEN:
+        hub.speaker.beep()
+        wait(1000)
+        mi.stop()
+        md.stop()
+        wait(3000)
+        #avance1()
+        giro1()
+        avance1()
+    #negro
+    if sensorizq.reflection() > 20:
+        mi.run(60)
+    
+    #blanco
+    if sensorizq.reflection() < 20:
+        mi.run(-80)
+
+    if sensorder.reflection() > 20:
+        md.run(60)
+
+    if sensorder.reflection() < 20:
+        md.run(-80)
