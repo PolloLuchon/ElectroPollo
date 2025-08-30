@@ -1,0 +1,67 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+
+mi = Motor(Port.B, Direction.COUNTERCLOCKWISE)
+md = Motor(Port.E)
+sensorizq = ColorSensor(Port.A)
+sensorder = ColorSensor(Port.D)
+
+Color.GREENI = Color(h=162, s=68, v=32)
+Color.GREEND = Color(h=166, s=49, v=45)
+Color.GRAY = Color(h=186, s=15, v=75)
+#Color.BLACK = Color(h=  , s=  , v=  )
+#Color.WHITE = Color(h=  , s=  , v=  )
+my_colors = (Color.GREEND,Color.GREENI, Color.RED,Color.WHITE,Color.GRAY, Color.NONE)
+
+
+sensorder.detectable_colors(my_colors)
+sensorizq.detectable_colors(my_colors)
+
+"""
+
+while True:
+    reflection = sensorder.reflection()
+    print(reflection)
+"""
+
+while True:
+    color1 = sensorder.color()
+    reflection1 = sensorder.reflection()
+    color2 = sensorizq.color()
+    reflection2 = sensorder.reflection()
+
+    
+    if sensorizq.reflection() > 25:
+        mi.run(80)
+    
+    #blanco
+    if sensorizq.reflection() < 20:
+        mi.run(-80)
+
+    if sensorder.reflection() > 25:
+        md.run(80)
+
+    if sensorder.reflection() < 20:
+        md.run(-80)
+
+    if sensorder.reflection() == 12:
+        mi.stop()
+        md.stop()
+        wait(1000)
+        print("verde1")
+
+    if sensorizq.reflection() == 12:
+        print("verde2")
+        mi.stop()
+        md.stop()
+        wait(1000)
+
+    if sensorder.color() == Color.GREEND:
+        pass
+    if sensorizq.color() == Color.GREENI:
+        pass
