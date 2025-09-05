@@ -1,0 +1,16 @@
+
+    #seguidor de linea
+    if sensorizq.reflection() > 25:
+        mi.run(110)
+    
+    #blanco
+    if sensorizq.reflection() < 20:
+        mi.run(-90)
+
+    if sensorder.reflection() > 25:
+        md.run(110)
+
+    if sensorder.reflection() < 20:
+        md.run(-90)
+
+   
