@@ -1,0 +1,85 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+
+mi = Motor(Port.B, Direction.COUNTERCLOCKWISE)
+md = Motor(Port.E)
+sensorizq = ColorSensor(Port.A)
+sensorder = ColorSensor(Port.D)
+
+Color.GREEND = Color(h=162, s=68, v=32)
+Color.GREENI = Color(h=162, s=68, v=32)
+Color.GRAY = Color(h=146, s=15, v=75)
+Color.BLACK = Color(h=205  , s=13  , v=99 )
+Color.WHITE = Color(h=190  , s=11  , v=95 )
+#falso verde derecho
+Color.CYAN = Color( h=171, s=22, v=39)
+#falso verde izq
+Color.RED= Color( h=199, s=13, v=97)
+
+
+my_colorsd = (Color.GREEND, Color.RED,Color.WHITE,Color.GRAY, Color.CYAN, Color.NONE)
+my_colorsi = (Color.GREENI, Color.RED,Color.WHITE,Color.GRAY, Color.NONE)
+
+
+sensorder.detectable_colors(my_colorsd)
+sensorizq.detectable_colors(my_colorsi)
+
+
+"""
+while True:
+    color = sensorizq.hsv()
+    print(color)
+"""
+
+while True:
+    #= sensorder.color()
+    reflection1 = sensorder.reflection()
+ # = sensorizq.color()
+    reflection2 = sensorder.reflection()
+
+    color1 = sensorizq.hsv()
+    print(color1, "izq")
+    
+    color2 = sensorder.hsv()
+    print(color2, "der")
+    #seguidor de linea
+    if sensorizq.reflection() > 25:
+        mi.run(110)
+    
+    #blanco
+    if sensorizq.reflection() < 20:
+        mi.run(-90)
+
+    if sensorder.reflection() > 25:
+        md.run(110)
+
+    if sensorder.reflection() < 20:
+        md.run(-90)
+#FALSO VERDE
+    if sensorder.color() == Color.CYAN:
+        pass
+    
+    if sensorizq.color() == Color.RED:
+        pass
+#VERDE
+    if sensorder.color() == Color.GREEND:
+        md.stop()
+        mi.stop()
+        wait(1000)
+        mi.run(200)
+        md.run(10)
+    if sensorizq.color() == Color.GREENI:
+        md.stop()
+        mi.stop()
+        wait(1000)
+        md.run(200)
+        mi.run(10)
+
+
+      
+    
