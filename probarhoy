@@ -1,0 +1,54 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor
+from pybricks.parameters import Port, Color
+from pybricks.tools import wait
+
+hub = PrimeHub()
+
+# Motores
+mi = Motor(Port.B)
+md = Motor(Port.E)
+
+# Sensores
+sensorizq = ColorSensor(Port.A)
+sensorder = ColorSensor(Port.D)
+
+# Colores 
+my_colors = (Color.GREEN, Color.WHITE, Color.BLACK, Color.NONE)
+sensorizq.detectable_colors(my_colors)
+sensorder.detectable_colors(my_colors)
+
+while True:
+    color_izq = sensorizq.color()
+    color_der = sensorder.color()
+
+    #  Detección de verde
+    if color_izq == Color.GREEN and color_der == Color.GREEN:
+        print("detener")
+        mi.stop()
+        md.stop()
+
+
+    elif color_izq == Color.GREEN:
+        print("giro izquierda")
+        mi.run(-200)   # retrocede motor izquierdo
+        md.run(200)    # avanza motor derecho
+      
+
+    elif color_der == Color.GREEN:
+        print("Verde a la derecha → giro derecha")
+        mi.run(200)    # avanza motor izquierdo
+        md.run(-200)   # retrocede motor derecho
+
+
+    else:
+        # Seguidor de línea  
+        if color_izq == Color.WHITE:
+            mi.run(100)
+        elif color_izq == Color.BLACK:
+            mi.run(-100)
+
+        if color_der == Color.WHITE:
+            md.run(100)
+        elif color_der == Color.BLACK:
+            md.run(-100)
