@@ -1,0 +1,34 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor
+from pybricks.parameters import Port
+
+hub = PrimeHub()
+
+motor_izq = Motor(Port.B)
+motor_der = Motor(Port.E)
+
+sensor_izq = ColorSensor(Port.A)
+sensor_der = ColorSensor(Port.D)
+
+
+
+while True:
+    color_izq = sensor_izq.reflection()
+    color_der = sensor_der.reflection()
+
+    if color_izq < 50 and color_der < 35:
+        # Ambos ven negro → avanzar despacio
+        motor_izq.run(50)
+        motor_der.run(50)
+    elif color_izq < 35:
+        # Solo izquierdo ve negro → girar a la derecha
+        motor_izq.run(50//2)
+        motor_der.run(100)
+    elif color_der < 35:
+        # Solo derecho ve negro → girar a la izquierda
+        motor_izq.run(100)
+        motor_der.run(50//2)
+    else:
+        # Ninguno ve negro → recto
+        motor_izq.run(50)
+        motor_der.run(50)
