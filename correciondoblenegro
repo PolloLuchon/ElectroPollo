@@ -1,0 +1,161 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor
+from pybricks.parameters import Port, Color, Direction
+from pybricks.tools import wait
+
+hub = PrimeHub()
+
+# Motores
+mi = Motor(Port.B,  Direction.COUNTERCLOCKWISE)
+md = Motor(Port.E)
+
+# Sensores
+sensorizq = ColorSensor(Port.A)
+sensorder = ColorSensor(Port.D)
+
+# Colores 
+my_colors = (Color.GREEN, Color.WHITE, Color.BLACK, Color.NONE)
+sensorizq.detectable_colors(my_colors)
+sensorder.detectable_colors(my_colors)
+
+# --- Parámetros ---
+vel_base = 70     # velocidad en recta
+vel_negro = -50   # corrección suave en negro
+
+while True:
+    reflection_der = sensorder.reflection()
+    reflection_izq = sensorizq.reflection()
+    color_izq = sensorizq.color()
+    color_der = sensorder.color()
+    print(reflection_der, "derecho", reflection_izq, "izquierdo")
+
+    # --- Detección de verde ---
+    if color_izq == Color.GREEN and color_der == Color.GREEN:
+        print("detener en doble verde")
+        mi.stop()
+        md.stop()
+        wait(500)
+
+    elif color_izq == Color.GREEN:
+        print("giro izquierda")
+        mi.run(-150)
+        md.run(150)
+        wait(300)
+        mi.stop()
+        md.stop()
+
+    elif color_der == Color.GREEN:
+        print("giro derecha")
+        mi.run(150)
+        md.run(-150)
+        wait(300)
+        mi.stop()
+        md.stop()
+
+    else:
+        # --- Seguidor de línea ---
+        if reflection_izq < 35:
+            mi.run(vel_negro)
+        else:
+            mi.run(vel_base)
+
+        if reflection_der < 35:
+            md.run(vel_negro)
+        else:
+            md.run(vel_base)
+
+    # --- Doble negro ---
+    if reflection_izq < 35 and reflection_der < 35:
+        print("doble negro")
+        mi.stop()
+        md.stop()
+        wait(200)
+        mi.run(-80)
+        md.run(-80)
+        wait(300)
+        mi.run(-80)
+        md.run(80)
+        wait(300)
+        mi.stop()
+        md.stop()
+
+    wait(10)  # para estabilizar el buclefrom pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor
+from pybricks.parameters import Port, Color, Direction
+from pybricks.tools import wait
+
+hub = PrimeHub()
+
+# Motores
+mi = Motor(Port.B,  Direction.COUNTERCLOCKWISE)
+md = Motor(Port.E)
+
+# Sensores
+sensorizq = ColorSensor(Port.A)
+sensorder = ColorSensor(Port.D)
+
+# Colores 
+my_colors = (Color.GREEN, Color.WHITE, Color.BLACK, Color.NONE)
+sensorizq.detectable_colors(my_colors)
+sensorder.detectable_colors(my_colors)
+
+# --- Parámetros ---
+vel_base = 70     # velocidad en recta
+vel_negro = -50   # corrección suave en negro
+
+while True:
+    reflection_der = sensorder.reflection()
+    reflection_izq = sensorizq.reflection()
+    color_izq = sensorizq.color()
+    color_der = sensorder.color()
+    print(reflection_der, "derecho", reflection_izq, "izquierdo")
+
+    # --- Detección de verde ---
+    if color_izq == Color.GREEN and color_der == Color.GREEN:
+        print("detener en doble verde")
+        mi.stop()
+        md.stop()
+        wait(500)
+
+    elif color_izq == Color.GREEN:
+        print("giro izquierda")
+        mi.run(-150)
+        md.run(150)
+        wait(300)
+        mi.stop()
+        md.stop()
+
+    elif color_der == Color.GREEN:
+        print("giro derecha")
+        mi.run(150)
+        md.run(-150)
+        wait(300)
+        mi.stop()
+        md.stop()
+
+    else:
+        # --- Seguidor de línea ---
+        if reflection_izq < 35:
+            mi.run(vel_negro)
+        else:
+            mi.run(vel_base)
+
+        if reflection_der < 35:
+            md.run(vel_negro)
+        else:
+            md.run(vel_base)
+
+    # --- Doble negro ---
+    if reflection_izq < 35 and reflection_der < 35:
+        print("doble negro")
+        mi.stop()
+        md.stop()
+        wait(200)
+        mi.run(-80)
+        md.run(-80)
+        wait(300)
+        mi.run(-80)
+        md.run(80)
+        wait(300)
+
+    wait(10)  # para estabilizar el bucle
