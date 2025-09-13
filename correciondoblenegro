@@ -19,8 +19,8 @@ sensorizq.detectable_colors(my_colors)
 sensorder.detectable_colors(my_colors)
 
 # --- Parámetros ---
-vel_base = 70     # velocidad en recta
-vel_negro = -50   # corrección suave en negro
+vel_base = 55     # velocidad en recta
+vel_negro = -80   # corrección suave en negro
 
 while True:
     reflection_der = sensorder.reflection()
