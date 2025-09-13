@@ -76,10 +76,14 @@ while True:
         mi.run(-80)
         md.run(80)
         wait(300)
-        mi.stop()
-        md.stop()
+
 
     wait(10)  # para estabilizar el buclefrom pybricks.hubs import PrimeHub
+
+
+
+PARA PROBAR 
+from pybricks.hubs import PrimeHub
 from pybricks.pupdevices import Motor, ColorSensor
 from pybricks.parameters import Port, Color, Direction
 from pybricks.tools import wait
@@ -87,38 +91,37 @@ from pybricks.tools import wait
 hub = PrimeHub()
 
 # Motores
-mi = Motor(Port.B,  Direction.COUNTERCLOCKWISE)
+mi = Motor(Port.B, Direction.COUNTERCLOCKWISE)
 md = Motor(Port.E)
 
 # Sensores
 sensorizq = ColorSensor(Port.A)
 sensorder = ColorSensor(Port.D)
 
-# Colores 
+# Colores
 my_colors = (Color.GREEN, Color.WHITE, Color.BLACK, Color.NONE)
 sensorizq.detectable_colors(my_colors)
 sensorder.detectable_colors(my_colors)
 
-# --- Parámetros ---
-vel_base = 70     # velocidad en recta
-vel_negro = -50   # corrección suave en negro
+# Parámetros
+vel_base = 70     # velocidad normal
+vel_giro = 100    # cuánto gira cuando se sale de la línea
+umbral = 35       # separación blanco/negro
 
 while True:
-    reflection_der = sensorder.reflection()
-    reflection_izq = sensorizq.reflection()
+    ref_izq = sensorizq.reflection()
     color_izq = sensorizq.color()
     color_der = sensorder.color()
-    print(reflection_der, "derecho", reflection_izq, "izquierdo")
 
     # --- Detección de verde ---
     if color_izq == Color.GREEN and color_der == Color.GREEN:
-        print("detener en doble verde")
+        print("doble verde → detener")
         mi.stop()
         md.stop()
         wait(500)
 
     elif color_izq == Color.GREEN:
-        print("giro izquierda")
+        print("verde izquierda")
         mi.run(-150)
         md.run(150)
         wait(300)
@@ -126,27 +129,26 @@ while True:
         md.stop()
 
     elif color_der == Color.GREEN:
-        print("giro derecha")
+        print("verde derecha")
         mi.run(150)
         md.run(-150)
         wait(300)
         mi.stop()
         md.stop()
 
+    # --- Seguidor de línea con un sensor ---
     else:
-        # --- Seguidor de línea ---
-        if reflection_izq < 35:
-            mi.run(vel_negro)
+        if ref_izq < umbral:
+            # está sobre el negro → girar a la izquierda
+            mi.run(-vel_giro)
+            md.run(vel_giro)
         else:
+            # está sobre blanco → avanzar derecho
             mi.run(vel_base)
-
-        if reflection_der < 35:
-            md.run(vel_negro)
-        else:
             md.run(vel_base)
 
     # --- Doble negro ---
-    if reflection_izq < 35 and reflection_der < 35:
+    if sensorizq.reflection() < umbral and sensorder.reflection() < umbral:
         print("doble negro")
         mi.stop()
         md.stop()
@@ -157,5 +159,8 @@ while True:
         mi.run(-80)
         md.run(80)
         wait(300)
+        mi.stop()
+        md.stop()
 
-    wait(10)  # para estabilizar el bucle
+    wait(10)
+
