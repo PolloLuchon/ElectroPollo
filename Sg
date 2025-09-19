@@ -21,24 +21,24 @@ while True:
     ref_i = s_izq.reflection()
     ref_d = s_der.reflection()
 
-    # --- Detección de verde ---
+    #Detección de verde
     if color_i == Color.GREEN:
-        # Verde a la izquierda → giro fuerte izquierda
+        # Verde a la izquierda
         mi.run(-vel)
         md.run(vel)
         ultimo = "izq"
-        wait(500)  # medio segundo de giro
+        wait(500)
         continue
 
     if color_d == Color.GREEN:
-        # Verde a la derecha → giro fuerte derecha
+        # Verde a la derecha
         mi.run(vel)
         md.run(-vel)
         ultimo = "der"
         wait(500)
         continue
 
-    # --- Seguidor de línea normal ---
+    # Seguidor de línea 
     if ref_i < umbral and ref_d > umbral:
         mi.run(-vel)
         md.run(vel)
@@ -50,7 +50,7 @@ while True:
         ultimo = "der"
 
     elif ref_i < umbral and ref_d < umbral:
-        # Ambos negro → seguir última dirección
+        # Ambos negro sigue última dirección
         if ultimo == "izq":
             mi.run(-vel)
             md.run(vel)
@@ -58,7 +58,7 @@ while True:
             mi.run(vel)
             md.run(-vel)
     else:
-        # Ambos blanco → recto
+        # Ambos blanco derecho
         mi.run(vel)
         md.run(vel)
 
