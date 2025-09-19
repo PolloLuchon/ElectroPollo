@@ -1,0 +1,65 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor
+from pybricks.parameters import Port, Color
+from pybricks.tools import wait
+
+hub = PrimeHub()
+
+mi = Motor(Port.B)  # Motor izquierdo
+md = Motor(Port.E)  # Motor derecho
+
+s_izq = ColorSensor(Port.A)
+s_der = ColorSensor(Port.D)
+
+vel = 60
+umbral = 35
+ultimo = "izq"
+
+while True:
+    color_i = s_izq.color()
+    color_d = s_der.color()
+    ref_i = s_izq.reflection()
+    ref_d = s_der.reflection()
+
+    # --- Detección de verde ---
+    if color_i == Color.GREEN:
+        # Verde a la izquierda → giro fuerte izquierda
+        mi.run(-vel)
+        md.run(vel)
+        ultimo = "izq"
+        wait(500)  # medio segundo de giro
+        continue
+
+    if color_d == Color.GREEN:
+        # Verde a la derecha → giro fuerte derecha
+        mi.run(vel)
+        md.run(-vel)
+        ultimo = "der"
+        wait(500)
+        continue
+
+    # --- Seguidor de línea normal ---
+    if ref_i < umbral and ref_d > umbral:
+        mi.run(-vel)
+        md.run(vel)
+        ultimo = "izq"
+
+    elif ref_d < umbral and ref_i > umbral:
+        mi.run(vel)
+        md.run(-vel)
+        ultimo = "der"
+
+    elif ref_i < umbral and ref_d < umbral:
+        # Ambos negro → seguir última dirección
+        if ultimo == "izq":
+            mi.run(-vel)
+            md.run(vel)
+        else:
+            mi.run(vel)
+            md.run(-vel)
+    else:
+        # Ambos blanco → recto
+        mi.run(vel)
+        md.run(vel)
+
+    wait(10)
