@@ -1,0 +1,95 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor
+from pybricks.parameters import Port, Color, Direction
+from pybricks.tools import wait
+
+hub = PrimeHub()
+
+# --- Motores ---
+mi = Motor(Port.B, Direction.COUNTERCLOCKWISE)
+md = Motor(Port.E)
+
+# --- Sensores ---
+sensor_izq = ColorSensor(Port.A)
+sensor_der = ColorSensor(Port.D)
+
+# --- Parámetros ---
+vel_base = 50
+vel_correccion = -80
+umbral = 35
+ultimo = "izq"
+
+while True:
+    refl_izq = sensor_izq.reflection()
+    refl_der = sensor_der.reflection()
+    color_izq = sensor_izq.color()
+    color_der = sensor_der.color()
+
+    # --- Detección de verde simple ---
+    if color_izq == Color.GREEN and refl_izq > 20 and color_der == Color.GREEN and refl_der > 20:
+        # Doble verde → detener
+        mi.stop()
+        md.stop()
+        print("Doble verde: detener")
+        wait(500)
+
+    elif color_izq == Color.GREEN and refl_izq > 20:
+        # Giro izquierda
+        print("Giro izquierda")
+        wait(100)  # pequeño retardo para confirmar
+        mi.run(-150)
+        md.run(150)
+        wait(300)
+        mi.stop()
+        md.stop()
+        ultimo = "izq"
+
+    elif color_der == Color.GREEN and refl_der > 20:
+        # Giro derecha
+        print("Giro derecha")
+        wait(100)
+        mi.run(150)
+        md.run(-150)
+        wait(300)
+        mi.stop()
+        md.stop()
+        ultimo = "der"
+
+    else:
+        # --- Seguidor de línea ---
+        if refl_izq < umbral:
+            mi.run(vel_correccion)
+            ultimo = "izq"
+        else:
+            mi.run(vel_base)
+
+        if refl_der < umbral:
+            md.run(vel_correccion)
+            ultimo = "der"
+        else:
+            md.run(vel_base)
+
+        # --- Doble negro → esquina de 90° ---
+        if refl_izq < umbral and refl_der < umbral:
+            print("Doble negro: esquina")
+            mi.stop()
+            md.stop()
+            wait(150)
+
+            # Retroceder
+            mi.run(-vel_correccion)
+            md.run(-vel_correccion)
+            wait(250)
+
+            # Girar según última dirección
+            if ultimo == "izq":
+                mi.run(-vel_correccion)
+                md.run(vel_correccion)
+            else:
+                mi.run(vel_correccion)
+                md.run(-vel_correccion)
+            wait(300)
+            mi.stop()
+            md.stop()
+
+    wait(10)
