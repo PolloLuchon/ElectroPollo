@@ -1,0 +1,152 @@
+from pybricks.hubs import PrimeHub
+from pybricks.pupdevices import Motor, ColorSensor, UltrasonicSensor, ForceSensor
+from pybricks.parameters import Button, Color, Direction, Port, Side, Stop
+from pybricks.robotics import DriveBase
+from pybricks.tools import wait, StopWatch
+
+hub = PrimeHub()
+
+mi = Motor(Port.B, Direction.COUNTERCLOCKWISE)
+md = Motor(Port.E)
+
+s_izq = ColorSensor(Port.A)
+s_der = ColorSensor(Port.D)
+s_medio = ColorSensor(Port.C)
+Color.GREEN = Color(h=165, s=68, v=32)
+Color.GRAY = Color(h=186, s=15, v=75)
+Color.CYAN = Color(h=180, s=24, v=26)
+Color.BLACK = Color(h=210  , s=17  , v=24  )
+Color.WHITE = Color(h=184  , s=5  , v=99 )
+my_colors = (Color.GREEN, Color.BLACK, Color.WHITE,Color.GRAY, Color.NONE, Color.CYAN)
+s_der.detectable_colors(my_colors)
+s_izq.detectable_colors(my_colors)
+s_medio.detectable_colors(my_colors)
+
+vel = 50
+umbral = 35
+ultimo = "izq"
+
+
+
+while True:
+    color_i = s_izq.color()
+    color_d = s_der.color()
+    ref_i = s_izq.reflection()
+    ref_d = s_der.reflection()
+    ref_m = s_medio.reflection()
+    tilt =  hub.imu.tilt()[0] 
+
+    #Doble Verde
+    if color_i and color_d == Color.GREEN:
+        mi.stop()
+        md.stop()
+        wait(5000)
+    #Detección de verde
+    # Verde a la izquierda
+    if color_i == Color.GREEN:
+        mi.run(-120)
+        md.run(120)
+        ultimo = "izq"
+        wait(500)
+
+        continue
+ # Verde a la derecha
+    if color_d == Color.GREEN:
+        mi.run(120)
+        md.run(-120)
+        ultimo = "der"
+        wait(500)
+        mi.run(vel)
+        md.run(vel)
+        wait(500)
+
+        continue
+
+    # Seguidor de línea 
+    if ref_i < umbral and ref_d > umbral:
+        mi.run(-vel)
+        md.run(vel)
+        ultimo = "izq"
+
+    elif ref_d < umbral and ref_i > umbral:
+        mi.run(vel)
+        md.run(-vel)
+        ultimo = "der"
+
+    elif ref_i < umbral and ref_d < umbral:
+        # Ambos negro sigue última dirección
+        if ultimo == "izq":
+            mi.run(-vel)
+            md.run(vel)
+        else:
+            mi.run(vel)
+            md.run(-vel)
+    else:
+        # Ambos blanco derecho
+        mi.run(vel)
+        md.run(vel)
+
+    #Doble negro
+    if ref_i < umbral and ref_d < umbral and ref_m < umbral:
+        mi.run(vel)
+        md.run(vel)
+        wait(300)
+    #T derecha
+    if ref_d < umbral and ref_m < umbral:
+        mi.run(vel)
+        md.run(vel)
+        wait(300)
+    #T izquierda
+
+    
+    #Rampas
+    #Subida
+    if  tilt < -15:
+        if ref_i < umbral and ref_d > umbral:
+            mi.run(-120)
+            md.run(120)
+            ultimo = "izq"
+
+        elif ref_d < umbral and ref_i > umbral:
+            mi.run(120)
+            md.run(-120)
+            ultimo = "der"
+
+        elif ref_i < umbral and ref_d < umbral:
+        # Ambos negro sigue última dirección
+            if ultimo == "izq":
+                mi.run(-120)
+                md.run(120)
+            else:
+                mi.run(120)
+                md.run(-120)
+        continue
+#Bajada
+    elif tilt > 15:
+        if ref_i < umbral and ref_d > umbral:
+            mi.run(-20)
+            md.run(20)
+            ultimo = "izq"
+
+        elif ref_d < umbral and ref_i > umbral:
+            mi.run(20)
+            md.run(-20)
+            ultimo = "der"
+
+        elif ref_i < umbral and ref_d < umbral:
+        # Ambos negro sigue última dirección
+            if ultimo == "izq":
+                mi.run(-20)
+                md.run(20)
+            else:
+                mi.run(20)
+                md.run(-20)
+
+        continue
+
+
+        
+
+    wait(10)
+
+
